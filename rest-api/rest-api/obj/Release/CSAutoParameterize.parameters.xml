@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<parameters>
+  <parameter name="ExamEntities-Web.config Connection String" description="ExamEntities Connection String used in web.config by the application to access the database." defaultValue="metadata=res://*/Model1.csdl|res://*/Model1.ssdl|res://*/Model1.msl;provider=System.Data.SqlClient;provider connection string=&quot;data source=hk-iot-school-instance.database.windows.net;initial catalog=Team01;persist security info=True;user id=Goran;password=B@b@N1j3Z@b@;MultipleActiveResultSets=True;App=EntityFramework&quot;" tags="SqlConnectionString">
+    <parameterEntry kind="XmlFile" scope="C:\\Users\\bskra\\source\\repos\\exam-system\\rest-api\\rest-api\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='ExamEntities']/@connectionString" />
+  </parameter>
+</parameters>

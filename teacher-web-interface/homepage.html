@@ -1,0 +1,84 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Exam System</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/styles.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src="js/homepage-script.js" type="text/javascript"></script>
+</head>
+<body>
+    <div id="container">
+        <div id="details-panel" class="panel panel-primary" style="width:25%">
+            <div class="panel-heading">Teacher</div>
+            <div id="professor-details" class="panel-body">
+                <label id="professor-name">Name:</label>
+                <br />
+                <label id="professor-surname">Surname: </label>
+                <br />
+                <label id="professor-class">Class: </label>
+                <br />
+                <label id="professor-id">ID: </label>
+                <br />
+                <button id="schedule-exam" type="button" class="btn btn-success pull-left">SCHEDULE AN EXAM</button>
+            </div>
+        </div>
+    </div>
+    <div>
+        <h2 style="color: green; font-size: 16px">Scheduled Exams: </h2>
+    </div>
+    <div id="scheduled-exams" class="list-group" style="width: 25%">
+
+    </div>
+    <!--list of all scheduled exams-->
+    <!--when clicked on an element open a list of questions-->
+    <!--Modal for editing scheduled exam's properties-->
+    <div id="edit-schedule-modal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 id="edit-exam-title" class="modal-title">Schedule Details</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="clearfix">
+                        <div class="pull-left">
+                            <label for="edit-start-date">Start Date:</label>
+                            <br />
+                            <input id="edit-start-date" type="date" placeholder="2020-08-21" />
+                            <br />
+                            <label for="edit-start-time">Start Time:</label>
+                            <br />
+                            <input id="edit-start-time" type="time" min="00:00:00" max="23:59:59" /> (24h)
+                            <br />
+                        </div>
+                        <div class="pull-right">
+                            <label for="edit-end-date">End Date:</label>
+                            <br />
+                            <input id="edit-end-date" type="date" />
+                            <br />
+                            <label for="edit-end-time">End Time:</label>
+                            <br />
+                            <input id="edit-end-time" type="time" min="00:00" max="23:59:59" /> (24h)
+                            <br />
+                        </div>
+                        <div>
+                            <label for="edit-avlbl-time">Available Time: </label>
+                            <br />
+                            <input id="edit-avlbl-time" type="text" />
+                            <label>min</label>
+                        </div>
+                    </div>
+                    <div class="modal-footer clearfix">
+                        <button id="save-changes" type="button" class="btn btn-success pull-right" data-dismiss="modal">SAVE</button>
+                        <button id="delete-schedule" type="button" class="btn btn-danger pull-right" data-dismiss="modal">DELETE</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Modal for creating exam schedule-->
+</body>
+</html>
