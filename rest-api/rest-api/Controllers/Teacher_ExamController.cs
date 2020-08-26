@@ -64,14 +64,13 @@ namespace rest_api.Controllers
                 return BadRequest(ModelState);
             }
 
-            if (teacherExamDTO.ID != null || id != teacherExamDTO.ID)
+            if (teacherExamDTO.ID == null || id != teacherExamDTO.ID)
             {
                 return BadRequest();
             }
 
             Teacher_Exam teacherExam = db.Teacher_Exam.Find(teacherExamDTO.ID);
             teacherExam.TeacherID = teacherExamDTO.TeacherID;
-            teacherExam.ExamID = teacherExamDTO.ExamID;
             teacherExam.DatetimeStart = teacherExamDTO.DatetimeStart;
             teacherExam.DatetimeEnd = teacherExamDTO.DatetimeEnd;
             teacherExam.AvailableTime = teacherExamDTO.AvailableTime;

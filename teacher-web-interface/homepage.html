@@ -8,29 +8,35 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <script src="js/homepage-script.js" type="text/javascript"></script>
+    <script src="js/create-schedule-script.js" type="text/javascript"></script>
 </head>
 <body>
     <div id="container">
-        <div id="details-panel" class="panel panel-primary" style="width:25%">
-            <div class="panel-heading">Teacher</div>
+        <div id="details-panel" class="panel panel-primary">
+            <div class="panel-heading clearfix">
+                <img src="res/exam-system-icon.png"  height="45" width="45" />
+                Exam System :: Teacher
+                <button id="log-out" type="button" class="pull-right btn btn-success">
+                    <span class="glyphicon glyphicon-user"></span>
+                    LOG OUT
+                </button>
+            </div>
             <div id="professor-details" class="panel-body">
-                <label id="professor-name">Name:</label>
-                <br />
-                <label id="professor-surname">Surname: </label>
-                <br />
-                <label id="professor-class">Class: </label>
-                <br />
-                <label id="professor-id">ID: </label>
-                <br />
-                <button id="schedule-exam" type="button" class="btn btn-success pull-left">SCHEDULE AN EXAM</button>
+                <label id="professor-name" class="col-md-2">Name:</label>
+                <label id="professor-surname" class="col-md-2">Surname: </label>
+                <label id="professor-class" class="col-md-2">Class: </label>
+                <label id="professor-id" class="col-md-2">ID: </label>
+                <button id="schedule-exam" class="col-md-2 btn btn-success" type="button" data-toggle="modal" data-target="#new-schedule-modal">SCHEDULE AN EXAM</button>
+                <button id="create-exam" class="col-md-2 btn btn-success" type="button">CREATE AN EXAM</button>
+                <!--VIEW AN EXAM-->
             </div>
         </div>
     </div>
     <div>
         <h2 style="color: green; font-size: 16px">Scheduled Exams: </h2>
     </div>
-    <div id="scheduled-exams" class="list-group" style="width: 25%">
-
+    <div id="scheduled-exams" class="list-group">
+        <!--Dynamically added-->
     </div>
     <!--list of all scheduled exams-->
     <!--when clicked on an element open a list of questions-->
@@ -40,14 +46,14 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h3 id="edit-exam-title" class="modal-title">Schedule Details</h3>
+                    <h3 class="modal-title">Schedule Details</h3>
                 </div>
                 <div class="modal-body">
                     <div class="clearfix">
                         <div class="pull-left">
                             <label for="edit-start-date">Start Date:</label>
                             <br />
-                            <input id="edit-start-date" type="date" placeholder="2020-08-21" />
+                            <input id="edit-start-date" type="date" />
                             <br />
                             <label for="edit-start-time">Start Time:</label>
                             <br />
@@ -64,10 +70,12 @@
                             <input id="edit-end-time" type="time" min="00:00" max="23:59:59" /> (24h)
                             <br />
                         </div>
+                    </div>
+                    <div style="display: flex; align-items: center; justify-content: center;">
                         <div>
                             <label for="edit-avlbl-time">Available Time: </label>
                             <br />
-                            <input id="edit-avlbl-time" type="text" />
+                            <input id="edit-avlbl-time" style="width: 33%" type="number" />
                             <label>min</label>
                         </div>
                     </div>
@@ -80,5 +88,54 @@
         </div>
     </div>
     <!--Modal for creating exam schedule-->
+    <div id="new-schedule-modal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 id="edit-exam-title" class="modal-title">New Schedule</h3>
+                </div>
+                <div class="modal-body">
+                    <div id="first">
+                        <label>Select an exam: </label>
+                        <input id="searchterm" type="text" placeholder="Search..." onkeyup="filterExams()" />
+                        <div id="exam-container">
+                            <!--Dynamically added-->
+                        </div>
+                    </div>
+                    <div id="second" style="display: none;">
+                            <label for="selected-exam-name">Exam:</label>
+                            <label id="selected-exam-name" style="color: darkgreen;"></label>
+                            <br />
+                            <label for="new-start-date">Start Date:</label>
+                            <br />
+                            <input id="new-start-date" type="date" placeholder="2020-08-11" />
+                            <br />
+                            <label for="new-start-time">Start Time:</label>
+                            <br />
+                            <input id="new-start-time" type="time" min="00:00:00" max="23:59:59" /> (24h)
+                            <br />
+                            <label for="new-end-date">End Date:</label>
+                            <br />
+                            <input id="new-end-date" type="date" />
+                            <br />
+                            <label for="new-end-time">End Time:</label>
+                            <br />
+                            <input id="new-end-time" type="time" min="00:00" max="23:59:59" /> (24h)
+                            <br />
+                            <label for="new-avlbl-time">Available Time: </label>
+                            <br />
+                            <input id="new-avlbl-time" type="text" />
+                            <label>min</label>
+                        
+                    </div>    
+                </div>
+                <div id="second-submit" class="modal-footer clearfix" style="display: none;">
+                    <button id="back" class="btn btn-success pull-left" type="button" onclick="backModal()">BACK</button>
+                    <button id="create-schedule" class="btn btn-success pull-right" type="button" data-dismiss="modal">SCHEDULE</button>
+                </div>    
+            </div>
+        </div>
+    </div>
 </body>
 </html>

@@ -1,11 +1,14 @@
-"use strict"
+"use strict";
 $(document).ready(onDocumentReady);
+
+// TODO: Set spinner when waiting for server response -- does not work, try everything
 
 function onDocumentReady() {
     $('#submit').bind('click', sendLoginRequest);
 }
 
 function sendLoginRequest() {
+    createSpinner();
     $.ajax({
         url: 'https://hk-iot-team-02.azurewebsites.net/api/Teachers/Login',
         type: 'POST',
@@ -15,6 +18,7 @@ function sendLoginRequest() {
             Password: $('#login-password').val()
         }),
         success: function (data) {
+            $('#wait').empty();
             $('#message-box').empty();
             console.log("Code: " + data.Code + "\nID:" + data.TeacherID);
             switch (data.Code) {
@@ -30,6 +34,7 @@ function sendLoginRequest() {
             }
         },
         error: function (data) {
+            $('#wait').empty();
             console.log("Network error occured");
         },
     });
@@ -41,5 +46,11 @@ function createAlertDiv(message) {
         '<div class="alert alert-danger" role="alert">' +
         message +
         '</div >'
+    );
+}
+
+function createSpinner() {
+    $('#wait').append(
+        '<span class="s">Loading...</span>'
     );
 }
