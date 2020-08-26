@@ -4,6 +4,7 @@ $(document).ready(onDocumentReady);
 let teacherID;
 let classID;
 let schedules;
+let allExams;
 
 //SCHEDULE: 25/08 -> Make exam select feature for scheduling and editing the schedules -- POSTPONED -- DONE
 //SCHEDULE: 26/08 -> Make exam maker feature for creating exams with questions
@@ -15,8 +16,11 @@ let schedules;
 // TODO: Create system for creating exams with questions (long task)
 // TODO: Create login attempt on page refresh after 10 min of an open session
 // TODO: Create logout functionallity
-// TODO: Create seperate nav for all exams and schedules
+// TODO: Create seperate nav for all exams and schedules, UPDATE: filter item clicked does not work
+// TODO: Reuse populate schedule and all exams methods for filtering results
 
+// ERROR: Spinners do not work while waiting for filter results
+// ERROR: When POSTing Schedules, many copies are created?????
 // ERROR: Listener of list-item object does not pass id to modal -- FIXED
 // ERROR: Font color highlight (exam status) does not work properly(check conditioning) -- FIXED, try something with badges
 // ERROR: Start date in modal does not display correctly (does not even display) -- FIXED
@@ -65,20 +69,6 @@ class DateTimeFactory {
     }
 }
 
-// Depricated
-/*
-class Exam {
-    constructor(jsonString) {
-        this.id = jsonString.ID;
-        this.title = jsonString.ExamTitle;
-        this.subject = jsonString.Subject;
-        this.time = jsonString.AvailableTime;
-        this.dateTimeStart = new Date(jsonString.DatetimeStart);
-        this.dateTimeEnd = new Date(jsonString.DatetimeEnd);
-        this.active = true;
-    }
-}*/
-
 // START 
 function onDocumentReady() {
     // Reset global properties
@@ -90,53 +80,133 @@ function onDocumentReady() {
     teacherID = url.split('?')[1].split('=')[1];
     // Populate containers
     populateDetails();
-    populateScheduledExams();
+    retrieveSchedules();
+    populateSubjectFilter();
 
     $('#new-schedule-modal').bind('show.bs.modal', function () {
         startNewScheduleModal();
     });
 }
 
+/*
+ * Container population
+ */
+
 function populateDetails() {
     $.get('https://hk-iot-team-02.azurewebsites.net/api/Teachers/' + teacherID, function (data) {
-        const dataList = [data.Name, data.Surname, data.Class, teacherID];
-        let i = 0;
-        $('#professor-details').children('label').each(function () {
-            this.append(' ' + dataList[i]);
-            i++;
-        });
+        $('#professor-name').html(data.Name + ' ' + data.Surname + ' teaches ' + data.Class);
     });
 }
 
-function populateScheduledExams() {
-    $('#scheduled-exams').empty();
+function retrieveSchedules() {
+    $('#all-exams').hide();
+    $('#scheduled-exams').show();
 
     $.get('https://hk-iot-team-02.azurewebsites.net/api/Teacher_Exam/' + teacherID, function (data) {
         schedules = {};
-        data.forEach((exam) => {    
-            const currentTime = new Date().getTime();
-            const dateStart = new Date(exam.DatetimeStart);
-            const dateEnd = new Date(exam.DatetimeEnd);
-            let activeStatus = "READY";
-            if (currentTime > dateStart.getTime() && currentTime < dateEnd.getTime()) {
-                activeStatus = "ACTIVE";
-            } else if (currentTime > dateEnd.getTime()) {
-                activeStatus = "FINISHED";
-            }
-
+        data.forEach((exam) => {
             schedules[exam.ID] = exam;
-            const examItem = createListItem(exam, activeStatus);
-            $('#scheduled-exams').append(examItem);
-           
-            //Very sketchy, listener should be added in html element, not via ID selector
-            $('#' + exam.ID).bind('click', function () {
-                startEditScheduleModal(exam.ID);
-            });
-      
         });
-
-        console.log(schedules); // DEBUG
+        console.log(schedules);
+        populateScheduledExams(schedules);
     });
+}
+
+function retrieveAllExams() {
+    $('#all-exams').show();
+    $('#scheduled-exams').hide();
+    $.get('https://hk-iot-team-02.azurewebsites.net/api/Exams', function (data) {
+        allExams = {};
+        data.forEach((item) => {
+            allExams[item.ID] = item;
+        });
+        populateAllExams(allExams);
+    });
+}
+
+function populateScheduledExams(_schedules) {
+    $('#scheduled-exams').empty();
+    // Set spinner
+    $('#wait-spinner').append('<span class="sr-only">Loading...</span>');
+    const currentTime = new Date().getTime();
+    for (const key in _schedules) {
+        const schedule = _schedules[key];
+        // Check active status
+        const dateStart = new Date(schedule.DatetimeStart);
+        const dateEnd = new Date(schedule.DatetimeEnd);
+        let activeStatus = "READY";
+        if (currentTime > dateStart.getTime() && currentTime < dateEnd.getTime()) {
+            activeStatus = "ACTIVE";
+        } else if (currentTime > dateEnd.getTime()) {
+            activeStatus = "FINISHED";
+        }
+
+        const examItem = createListItem(schedule, activeStatus);
+        $('#scheduled-exams').append(examItem);
+        //Very sketchy, listener should be added in html element, not via ID selector
+        $('#' + schedule.ID).bind('click', function () {
+            startEditScheduleModal(schedule.ID);
+        });
+    }
+    // Remove spinner
+    $('#wait-spinner').empty();
+}
+
+function populateAllExams(_allExams) {
+    $('#all-exams-container').empty();
+    // Set spinner
+    $('#wait-spinner').append('<span class="sr-only">Loading...</span>');
+    for (const key in _allExams) {
+        const exam = _allExams[key];
+        $('#all-exams-container').append(
+            '<button class="card list-group-item d-flex justify-content-between align-items-center" data-toggle="modal" style="width: 20%; display: inline;"> ' +
+            '<div class="d-flex w-100 justify-content-between">' +
+            '<h3 class="mb-2 h4">' + exam.Title +
+            '</h3>' +
+            '</div >' +
+            '<small>' + 'Subject: ' + exam.Subject + '</small>' +
+            '</button >'
+        );
+    }
+    // Remove spinner
+    $('#wait-spinner').empty();
+}
+
+function populateSubjectFilter() {
+    $.get('https://hk-iot-team-02.azurewebsites.net/api/Subjects', function (data) {
+        data.forEach((item) => {
+            $('#subject-filter').append(
+                '<li class="nav-item">' +
+                    '<a id="'+ item.Name + '" style="color: darkgreen; width:100%">' +
+                        item.Name +
+                    '</a >' +
+                '</li>');
+            // Filter exams and schedules by selected subject 
+            $('#' + item.Name).bind('click', function () {
+                $('#scheduled-exams-container').empty();
+                $('#all-exams-container').empty();
+                const subject = item.Name;
+                console.log(subject);
+                const currentTime = new Date().getTime();
+                let filterSchedules = {};
+                for (const key in schedules) {
+                    const schedule = schedules[key];
+                    if (schedule.Subject === subject) {
+                        filterSchedules[key] = schedule;
+                    }
+                }
+                let filterExams = {};
+                for (const key in allExams) {
+                    const exam = allExams[key];
+                    if (exam.Subject === subject) {
+                        filterExams[key] = exam;
+                    }
+                }
+                populateScheduledExams(filterSchedules);
+                populateAllExams(filterExams);
+            });
+        });
+    })
 }
 
 function createListItem(exam, status) {
@@ -151,7 +221,7 @@ function createListItem(exam, status) {
     const endDate = new DateTimeFactory(exam.DatetimeEnd);
     //this is absolutetly terrible part of code
     var examItem =
-        '<button id="' + exam.ID + '" class="list-group-item d-flex justify-content-between align-items-center" data-toggle="modal" data-target="#edit-schedule-modal">' +
+        '<button id="' + exam.ID + '" class="card list-group-item d-flex justify-content-between align-items-center" data-toggle="modal" data-target="#edit-schedule-modal" style="width: 20%; display: inline;"> ' +
             '<div class="d-flex w-100 justify-content-between">'+
             '<h3 class="mb-2 h4">' + exam.ExamTitle +
                 '<span class="badge badge-secondary badge-pill">' + status + ' </span>' +
@@ -163,10 +233,12 @@ function createListItem(exam, status) {
                 'Available Time: ' + '<br/>' + parseFloat(exam.AvailableTime).toFixed(0) + " min" + 
             '</p >' +
             '<small>' + 'Subject: ' + exam.Subject + '</small>' +
-        '</button >';
+        '</button>';
     return examItem;
 }
-
+/*
+ * Modal handelers
+ */
 function startEditScheduleModal(id) {
     var selectedExam = schedules[id];
     var startDate = new DateTimeFactory(selectedExam.DatetimeStart);
@@ -209,6 +281,9 @@ function startEditScheduleModal(id) {
     });
 }
 
+/*
+ * Schedule AJAX methods 
+ */
 function schedulePUT(schedule) {
     $.ajax({
         url: 'https://hk-iot-team-02.azurewebsites.net/api/Teacher_Exam/' + schedule.ID,
@@ -217,7 +292,7 @@ function schedulePUT(schedule) {
         data: JSON.stringify(schedule),
         success: function (data) {
             alert("Successful!");
-            populateScheduledExams();
+            retrieveSchedules();
         },
         error: function (data) {
             alert("Bad request") // DEBUG, delete for all instances 
@@ -231,7 +306,7 @@ function scheduleDELETE(id) {
         type: 'DELETE',
         success: function () {
             alert("Changes saved!");
-            populateScheduledExams();
+            retrieveSchedules();
         },
         error: function () {
             alert("Bad request!");
@@ -247,7 +322,7 @@ function schedulePOST(schedule) {
         data: JSON.stringify(schedule),
         success: function () {
             alert("Changes saved!");
-            populateScheduledExams();
+            retrieveSchedules();
         },
         error: function () {
             alert("Bad request!");

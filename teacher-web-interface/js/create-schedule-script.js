@@ -39,6 +39,7 @@ function startNewScheduleModal() {
             AvailableTime: time
         };
 
+        console.log(body);
         schedulePOST(body);
     });
 }

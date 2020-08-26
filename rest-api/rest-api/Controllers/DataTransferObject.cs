@@ -107,5 +107,17 @@ namespace rest_api.Controllers
                 }
             }
         }
+
+        public class SubjectDTO
+        {
+            public int ID { get; set; }
+            public string Name { get; set; }
+
+            public SubjectDTO(Subject subject)
+            {
+                this.ID = subject.ID;
+                this.Name = subject.Name;
+            }
+        }
     }
 }
