@@ -4,10 +4,12 @@ $(document).ready(onDocumentReady);
 let teacherID;
 let classID;
 let schedules;
+let subjects;
 let allExams;
 
 //SCHEDULE: 25/08 -> Make exam select feature for scheduling and editing the schedules -- POSTPONED -- DONE
 //SCHEDULE: 26/08 -> Make exam maker feature for creating exams with questions
+//SCHEDULE: 27/08 -> Build exam editor and creator and question controller(seperate page)
 
 // TODO: FILTER SCHEDULED EXAM VIEW BY SUBJECT ANY WAY YOU CAN
 // TODO: Write handler for date and time, parse date and time and display it separately in container -- DONE
@@ -16,11 +18,14 @@ let allExams;
 // TODO: Create system for creating exams with questions (long task)
 // TODO: Create login attempt on page refresh after 10 min of an open session
 // TODO: Create logout functionallity
-// TODO: Create seperate nav for all exams and schedules, UPDATE: filter item clicked does not work
-// TODO: Reuse populate schedule and all exams methods for filtering results
+// TODO: Create seperate nav for all exams and schedules, UPDATE: filter item clicked does not work -- DONE
+// TODO: Reuse populate schedule and all exams methods for filtering results -- DONE
+// TODO: retrieve only subjects that class attends - NO NEED LMAO
+// TODO: Delete all questions related to the exam when it gets deleted -- relations -- DONE
 
 // ERROR: Spinners do not work while waiting for filter results
-// ERROR: When POSTing Schedules, many copies are created?????
+// ERROR: When POSTing Schedules, many copies are created?????, I hate that
+// ERROR: Resizing the page in Chrome, and in general cards look wierd
 // ERROR: Listener of list-item object does not pass id to modal -- FIXED
 // ERROR: Font color highlight (exam status) does not work properly(check conditioning) -- FIXED, try something with badges
 // ERROR: Start date in modal does not display correctly (does not even display) -- FIXED
@@ -69,7 +74,9 @@ class DateTimeFactory {
     }
 }
 
-// START 
+/*
+* Start
+*/
 function onDocumentReady() {
     // Reset global properties
     teacherID = -1;
@@ -86,12 +93,15 @@ function onDocumentReady() {
     $('#new-schedule-modal').bind('show.bs.modal', function () {
         startNewScheduleModal();
     });
+
+    $('#new-exam-modal').bind('show.bs.modal', function () {
+        startNewExamModal();
+    });
 }
 
 /*
- * Container population
- */
-
+* Container population
+*/
 function populateDetails() {
     $.get('https://hk-iot-team-02.azurewebsites.net/api/Teachers/' + teacherID, function (data) {
         $('#professor-name').html(data.Name + ' ' + data.Surname + ' teaches ' + data.Class);
@@ -104,10 +114,10 @@ function retrieveSchedules() {
 
     $.get('https://hk-iot-team-02.azurewebsites.net/api/Teacher_Exam/' + teacherID, function (data) {
         schedules = {};
-        data.forEach((exam) => {
-            schedules[exam.ID] = exam;
+        data.forEach((schedule) => {
+            schedules[schedule.ID] = schedule;
         });
-        console.log(schedules);
+        console.log(schedules); // DEBUG
         populateScheduledExams(schedules);
     });
 }
@@ -153,6 +163,7 @@ function populateScheduledExams(_schedules) {
 }
 
 function populateAllExams(_allExams) {
+    // This does not work
     $('#all-exams-container').empty();
     // Set spinner
     $('#wait-spinner').append('<span class="sr-only">Loading...</span>');
@@ -160,11 +171,12 @@ function populateAllExams(_allExams) {
         const exam = _allExams[key];
         $('#all-exams-container').append(
             '<button class="card list-group-item d-flex justify-content-between align-items-center" data-toggle="modal" style="width: 20%; display: inline;"> ' +
-            '<div class="d-flex w-100 justify-content-between">' +
-            '<h3 class="mb-2 h4">' + exam.Title +
-            '</h3>' +
-            '</div >' +
+                '<div class="d-flex w-100 justify-content-between">' +
+                    '<h3 class="mb-2 h4">' + exam.Title + '</h3>' +
+                '</div >' +
             '<small>' + 'Subject: ' + exam.Subject + '</small>' +
+                '<br/>' +
+                '<a class="nav-link" style="color: darkgreen;" data-toggle="modal" data-target="#edit-exam-modal" value="' + exam.ID +'" onclick="startEditExamModal(event)">EDIT</a>' +
             '</button >'
         );
     }
@@ -174,31 +186,33 @@ function populateAllExams(_allExams) {
 
 function populateSubjectFilter() {
     $.get('https://hk-iot-team-02.azurewebsites.net/api/Subjects', function (data) {
+        subjects = {};
         data.forEach((item) => {
             $('#subject-filter').append(
                 '<li class="nav-item">' +
-                    '<a id="'+ item.Name + '" style="color: darkgreen; width:100%">' +
+                    '<a id="subject-'+ item.ID + '" class="nav-link" style="color: darkgreen;">' +
                         item.Name +
-                    '</a >' +
+                    '</a>' +
                 '</li>');
+            subjects[item.ID] = item.Name;
             // Filter exams and schedules by selected subject 
-            $('#' + item.Name).bind('click', function () {
+            $('#subject-' + item.ID).bind('click', function () {
                 $('#scheduled-exams-container').empty();
                 $('#all-exams-container').empty();
-                const subject = item.Name;
-                console.log(subject);
+                const subjectID = item.ID;
+                console.log(item.Name);
                 const currentTime = new Date().getTime();
                 let filterSchedules = {};
                 for (const key in schedules) {
                     const schedule = schedules[key];
-                    if (schedule.Subject === subject) {
+                    if (schedule.SubjectID === subjectID) {
                         filterSchedules[key] = schedule;
                     }
                 }
                 let filterExams = {};
                 for (const key in allExams) {
                     const exam = allExams[key];
-                    if (exam.Subject === subject) {
+                    if (exam.SubjectID === subjectID) {
                         filterExams[key] = exam;
                     }
                 }
@@ -236,9 +250,10 @@ function createListItem(exam, status) {
         '</button>';
     return examItem;
 }
+
 /*
- * Modal handelers
- */
+* Modal handelers
+*/
 function startEditScheduleModal(id) {
     var selectedExam = schedules[id];
     var startDate = new DateTimeFactory(selectedExam.DatetimeStart);
@@ -255,6 +270,11 @@ function startEditScheduleModal(id) {
         //check if end date is set before start date
         const tempDateStart = new Date(dateStart);
         const tempDateEnd = new Date(dateEnd);
+        const currentTime = new Date().getTime();
+        if (tempDateStart.getTime() < currentTime || tempDateEnd.getTime() < currentTime) {
+            alert("Cannot schedule exams in the past!");
+            return;
+        }
         if (tempDateStart.getTime() > tempDateEnd.getTime()) {
             alert("End date cannot be before start date!");
             startEditScheduleModal(id); // why does this does not work
@@ -281,9 +301,58 @@ function startEditScheduleModal(id) {
     });
 }
 
+function startEditExamModal(event) {
+    const id = $(event.target).attr('value');
+    const exam = allExams[id];
+    $('#edit-exam-modal').ready(function () {
+        // Populate modal
+        $('#edit-exam-title').val(exam.Title);
+        for (const key in subjects) {
+            $('#select-subject').append(
+                '<option value="' + key + '">' + subjects[key] + '</option>');
+        }
+        $('#select-subject').val(exam.SubjectID);
+
+        $('#edit-questions').bind('click', function () {
+            window.open("questions.html?id=" + exam.ID, "_self");
+        });
+
+        $('#submit-edit-exam').bind('click', function () {
+            var body = {
+                ID: exam.ID,
+                Title: $('#edit-exam-title').val(),
+                SubjectID: Number($('#select-subject').val()),
+                Subject: "none"
+            };
+            examPUT(body);
+            console.log(body);
+        });
+    });
+    console.log(exam.Title);
+}
+
+function startNewExamModal() {
+    for (const key in subjects) {
+        $('#n-select-subject').append(
+            '<option value="' + key + '">' + subjects[key] + '</option>');
+    }
+
+    $('#submit-create-exam').bind('click', function () {
+        var body = {
+            ID: 0,
+            Title: $('#new-exam-title').val(),
+            SubjectID: Number($('#n-select-subject').val()),
+            Subject: "none"
+        };
+        examPOST(body);
+        console.log(body);
+    });
+}
+
+//--AJAX METHODS
 /*
- * Schedule AJAX methods 
- */
+* Schedule AJAX methods 
+*/
 function schedulePUT(schedule) {
     $.ajax({
         url: 'https://hk-iot-team-02.azurewebsites.net/api/Teacher_Exam/' + schedule.ID,
@@ -326,6 +395,40 @@ function schedulePOST(schedule) {
         },
         error: function () {
             alert("Bad request!");
+        }
+    });
+}
+/*
+* Exam AJAX methods
+*/
+function examPUT(_exam) {
+    $.ajax({
+        url: 'https://hk-iot-team-02.azurewebsites.net/api/Exams/' + _exam.ID,
+        type: 'PUT',
+        contentType: 'application/json',
+        data: JSON.stringify(_exam),
+        success: function (data) {
+            alert("Successful!");
+            retrieveAllExams();
+        },
+        error: function (data) {
+            alert("Bad request") // DEBUG, delete for all instances 
+        }
+    });
+}
+
+function examPOST(_exam) {
+    $.ajax({
+        url: 'https://hk-iot-team-02.azurewebsites.net/api/Exams/',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(_exam),
+        success: function (data) {
+            alert("Successful!");
+            retrieveAllExams();
+        },
+        error: function (data) {
+            alert("Bad request") // DEBUG, delete for all instances 
         }
     });
 }

@@ -26,11 +26,16 @@ function startNewScheduleModal() {
         // Check if end date is before start date and vice versa
         const tempStartDate = new Date(dateStart);
         const tempEndDate = new Date(dateEnd);
+        const currentTime = new Date().getTime();
+        if (tempStartDate.getTime() < currentTime || tempEndDate.getTime() < currentTime) {
+            alert("Cannot schedule exams in the past!");
+            return;
+        }
         if (tempStartDate.getTime() > tempEndDate.getTime()) {
             alert("End date cannot be before start date!");
             return;
         }
-        // Construct POST method body
+       // Construct POST method body
         var body = {
             TeacherID: teacherID,
             ExamID: examID,
@@ -63,6 +68,7 @@ function retrieveExams() {
 } 
 
 function populateExamSelector(_examMap) {
+    $('#exam-container').empty();
     for (const key in _examMap) {
         $('#exam-container').append(
             '<button id="exam-' + _examMap[key].ID + '" class="list-group-item">' +
@@ -80,12 +86,17 @@ function populateExamSelector(_examMap) {
     }
 }
 
-function filterExams() {
-    const searchTerm = $(this).val();
+// not sure if this works
+function filterExams(event) {
+    const searchTerm = $(event.target).val();
+    if (searchTerm === "") {
+        populateExamSelector(examMap);
+        return;
+    }
     let filteredExamMap = {};
     for (const key in examMap) {
         var exam = examMap[key];
-        if (exam.Title.contains(searchTerm)) {
+        if (exam.Title.includes(searchTerm)) {
             filteredExamMap[key] = examMap[key];
         }
     }

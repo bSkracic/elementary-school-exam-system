@@ -54,6 +54,8 @@ namespace rest_api.Controllers
             public Nullable<int> SubjectID { get; set; }
             public string Subject { get; set; }
             //constructor
+            public ExamDTO(){}
+
             public ExamDTO(Exam exam)
             {
                 this.ID = exam.ID;

@@ -12,12 +12,11 @@
 </head>
 <body>
     <div id="container">
-        <!--Bring back those clearfix and pull-left/right style-->
         <div class="panel-heading clearfix" style="background-color: green;">
             <div class="pull-left">
                 <img style="display: inline" src="res/exam-system-icon.png" height="50" width="50" />
                 <h3 id="title" style="color: white; font-weight: bold; display: inline">Exam System :: Teacher </h3>
-                <br/>
+                <br />
                 <label id="professor-name" style="color: white; font-weight: bold; font-size: 15px;"></label>
             </div>
             <div class="pull-right">
@@ -25,19 +24,19 @@
                     <span class="glyphicon glyphicon-user"></span>
                     LOG OUT
                 </button>
-            </div>         
+            </div>
         </div>
     </div>
     <div id="navigation">
         <ul class="nav nav-pills clearfix">
             <li class="nav-item pull-left">
-                <a class="nav-link active" style="color: green;" onclick="retrieveSchedules()">Your Schedule</a>
+                <a class="nav-link" style="color: green;" onclick="retrieveSchedules()">Your Schedule</a>
             </li>
             <li class="nav-item pull-left">
                 <a class="nav-link" style="color: green;" onclick="retrieveAllExams()">All Exams</a>
             </li>
             <li class="nav-link pull-right">
-                <button class="btn btn-success" data-toggle="modal" data-target="#">Create An Exam</button>
+                <button class="btn btn-success" data-toggle="modal" data-target="#new-exam-modal">Create An Exam</button>
             </li>
             <li class="nav-link pull-right">
                 <button class="btn btn-success" data-toggle="modal" data-target="#new-schedule-modal">Schedule An Exam</button>
@@ -45,22 +44,22 @@
         </ul>
     </div>
     <div class="col-md-2">
-        <ul id="subject-filter" class="nav nav-tab flex-column nav-fill">
-           <!--Dynamically added-->
+        <ul id="subject-filter" class="nav flex-column">
+            <!--Dynamically added-->
         </ul>
     </div>
     <div id="scheduled-exams" class="clearfix col-md-10">
         <div id="scheduled-exams-container" class="list-group">
             <div id="wait-spinner" class="spinner-grow" role="status">
-                
+
             </div>
             <!--Dynamically added-->
         </div>
     </div>
-    <div id="all-exams"class="col-md-10" style="display: none;">
+    <div id="all-exams" class="col-md-10" style="display: none;">
         <div id="all-exams-container" class="list-group">
             <div id="wait-spinner" class="spinner-grow" role="status">
-                
+
             </div>
             <!--Dynamically added-->
         </div>
@@ -119,12 +118,12 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h3 id="edit-exam-title" class="modal-title">New Schedule</h3>
+                    <h3 class="modal-title">New Schedule</h3>
                 </div>
                 <div class="modal-body">
                     <div id="first">
                         <label>Select an exam: </label>
-                        <input id="searchterm" type="text" placeholder="Search..." onkeyup="filterExams()" />
+                        <input id="searchterm" type="text" placeholder="Search..." onkeyup="filterExams(event)" style="width: 75%;" />
                         <div id="exam-container">
                             <!--Dynamically added-->
                         </div>
@@ -158,6 +157,57 @@
                 <div id="second-submit" class="modal-footer clearfix" style="display: none;">
                     <button id="back" class="btn btn-success pull-left" type="button" onclick="backModal()">BACK</button>
                     <button id="create-schedule" class="btn btn-success pull-right" type="button" data-dismiss="modal">SCHEDULE</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Modal for editing exam-->
+    <div id="edit-exam-modal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="modal-title">Edit Exam:</h3>
+                </div>
+                <div class="modal-body clearfix">
+                    <label for="edit-exam-title">Title: </label>
+                    <br />
+                    <input id="edit-exam-title" type="text" style="font-size: 15px; width: 75%;" />
+                    <br />
+                    <label for="select-subject">Subject: </label>
+                    <br />
+                    <select id="select-subject" style="font-size: 15px">
+                        <!--Dynamically adedd-->
+                    </select>
+                </div>
+                <div class="modal-footer clearfix">
+                    <button id="edit-questions" class="btn btn-success pull-left" type="button" data-dismiss="modal">EDIT QUESTIONS</button>
+                    <button id="submit-edit-exam" class="btn btn-success pull-right" type="button" data-dismiss="modal">SAVE</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Modal for creating an exam-->
+    <div id="new-exam-modal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="modal-title">New Exam:</h3>
+                </div>
+                <div class="modal-body clearfix">
+                    <label for="new-exam-title">Title: </label>
+                    <br />
+                    <input id="new-exam-title" type="text" style="font-size: 15px; width: 75%;" />
+                    <br />
+                    <label for="n-select-subject">Subject: </label>
+                    <br />
+                    <select id="n-select-subject" style="font-size: 15px">
+                        <!--Dynamically adedd-->
+                    </select>
+                </div>
+                <div class="modal-footer clearfix">
+                    <button id="submit-create-exam" class="btn btn-success pull-right" type="button" data-dismiss="modal">CREATE AN EXAM</button>
                 </div>
             </div>
         </div>

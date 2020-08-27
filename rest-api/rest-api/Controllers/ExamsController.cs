@@ -46,19 +46,21 @@ namespace rest_api.Controllers
 
         // PUT: api/Exams/5
         [ResponseType(typeof(void))]
-        public IHttpActionResult PutExam(int id, Exam exam)
+        public IHttpActionResult PutExam(int id, ExamDTO examDTO)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != exam.ID)
+            if (id != examDTO.ID)
             {
                 return BadRequest();
             }
 
-            db.Entry(exam).State = EntityState.Modified;
+            Exam exam = db.Exams.Find(id);
+            exam.Title = examDTO.Title;
+            exam.SubjectID = examDTO.SubjectID;
 
             try
             {
@@ -80,13 +82,17 @@ namespace rest_api.Controllers
         }
 
         // POST: api/Exams
-        [ResponseType(typeof(Exam))]
-        public IHttpActionResult PostExam(Exam exam)
+        [ResponseType(typeof(ExamDTO))]
+        public IHttpActionResult PostExam(ExamDTO examDTO)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
+
+            Exam exam = new Exam();
+            exam.Title = examDTO.Title;
+            exam.SubjectID = examDTO.SubjectID;
 
             db.Exams.Add(exam);
             db.SaveChanges();
@@ -95,13 +101,20 @@ namespace rest_api.Controllers
         }
 
         // DELETE: api/Exams/5
-        [ResponseType(typeof(Exam))]
+        [ResponseType(typeof(ExamDTO))]
         public IHttpActionResult DeleteExam(int id)
         {
             Exam exam = db.Exams.Find(id);
             if (exam == null)
             {
                 return NotFound();
+            }
+
+            // Remove relations between quesitons and exam when deleting an exam
+            List<Exam_Question> questionsOnExam = db.Exam_Question.Where(entry => entry.ExamID == id).ToList();
+            foreach(var entry in questionsOnExam)
+            {
+                db.Exam_Question.Remove(entry);
             }
 
             db.Exams.Remove(exam);
