@@ -54,13 +54,31 @@ namespace rest_api.Controllers
             public Nullable<int> SubjectID { get; set; }
             public string Subject { get; set; }
             //constructor
-            public ExamDTO(){}
+            public ExamDTO() { }
 
             public ExamDTO(Exam exam)
             {
                 this.ID = exam.ID;
                 this.Title = exam.Title;
                 this.SubjectID = exam.SubjectID;
+            }
+        }
+
+        public class ExamQuestionDTO 
+        {
+            public int ID { get; set; }
+            public int ExamID { get; set; }
+            public int QuestionID { get; set; }
+            public int QuestionNumber { get; set; }
+
+            public ExamQuestionDTO() { }
+            
+            public ExamQuestionDTO(Exam_Question examQuestion)
+            {
+                this.ID = examQuestion.ID;
+                this.ExamID = (int)examQuestion.ExamID;
+                this.QuestionID = (int)examQuestion.QuestionID;
+                this.QuestionNumber = (int)examQuestion.QuestionNumber;
             }
         }
 

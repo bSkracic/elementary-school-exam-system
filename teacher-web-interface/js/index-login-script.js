@@ -1,7 +1,6 @@
 "use strict";
-$(document).ready(onDocumentReady);
 
-// TODO: Set spinner when waiting for server response -- does not work, try everything
+$(document).ready(onDocumentReady);
 
 function onDocumentReady() {
     $('#submit').bind('click', sendLoginRequest);
@@ -23,10 +22,10 @@ function sendLoginRequest() {
             console.log("Code: " + data.Code + "\nID:" + data.TeacherID);
             switch (data.Code) {
                 case -2:
-                    createAlertDiv("User does not exists");
+                    createAlertDiv("User does not exist.");
                     break;
                 case -1:
-                    createAlertDiv("Wrong password");
+                    createAlertDiv("Wrong password.");
                     break;
                 default:
                     window.open("homepage.html?id=" + data.TeacherID, "_self");
@@ -43,9 +42,9 @@ function sendLoginRequest() {
 function createAlertDiv(message) {
     $('#message-box').empty();
     $('#message-box').append(
-        '<div class="alert alert-danger" role="alert">' +
+        '<label class="alert alert-danger" style="width: 100%; text-align: center;" role="alert">' +
         message +
-        '</div >'
+        '</label >'
     );
 }
 

@@ -1,4 +1,5 @@
 "use strict";
+
 $(document).ready(onDocumentReady);
 
 let teacherID;
@@ -7,29 +8,16 @@ let schedules;
 let subjects;
 let allExams;
 
-//SCHEDULE: 25/08 -> Make exam select feature for scheduling and editing the schedules -- POSTPONED -- DONE
-//SCHEDULE: 26/08 -> Make exam maker feature for creating exams with questions
-//SCHEDULE: 27/08 -> Build exam editor and creator and question controller(seperate page)
-
-// TODO: FILTER SCHEDULED EXAM VIEW BY SUBJECT ANY WAY YOU CAN
-// TODO: Write handler for date and time, parse date and time and display it separately in container -- DONE
-// TODO: POST -- DONE, DELETE -- DONE , PUT -- DONE request to create scheduled exam; Send confirmation dialog when deleting
-// TODO: When POSTing, check if exam to be scheduled is already scheduled: warn user -- SKIPPED
-// TODO: Create system for creating exams with questions (long task)
 // TODO: Create login attempt on page refresh after 10 min of an open session
 // TODO: Create logout functionallity
-// TODO: Create seperate nav for all exams and schedules, UPDATE: filter item clicked does not work -- DONE
-// TODO: Reuse populate schedule and all exams methods for filtering results -- DONE
-// TODO: retrieve only subjects that class attends - NO NEED LMAO
-// TODO: Delete all questions related to the exam when it gets deleted -- relations -- DONE
+// TODO: Fix AJAX calls in a way they are triggered with html onclick attributes so they are called only once
 
-// ERROR: Spinners do not work while waiting for filter results
-// ERROR: When POSTing Schedules, many copies are created?????, I hate that
-// ERROR: Resizing the page in Chrome, and in general cards look wierd
-// ERROR: Listener of list-item object does not pass id to modal -- FIXED
-// ERROR: Font color highlight (exam status) does not work properly(check conditioning) -- FIXED, try something with badges
-// ERROR: Start date in modal does not display correctly (does not even display) -- FIXED
-// ERROR: schedule exam button onclick does not call startNewScheduleModal() -- FIXED
+// BUG: Filtering system for exam scheduling does not work
+// BUG: When POSTing Schedules, many copies are created?????, I hate that
+// BUG: Listener of list-item object does not pass id to modal -- FIXED
+// BUG: Font color highlight (exam status) does not work properly(check conditioning) -- FIXED, try something with badges
+// BUG: Start date in modal does not display correctly (does not even display) -- FIXED
+// BUG: schedule exam button onclick does not call startNewScheduleModal() -- FIXED
 
 class DateTimeFactory {
     constructor(datetimeString) {
@@ -303,6 +291,7 @@ function startEditScheduleModal(id) {
 
 function startEditExamModal(event) {
     const id = $(event.target).attr('value');
+    console.log(id);
     const exam = allExams[id];
     $('#edit-exam-modal').ready(function () {
         // Populate modal
@@ -360,7 +349,6 @@ function schedulePUT(schedule) {
         contentType: 'application/json',
         data: JSON.stringify(schedule),
         success: function (data) {
-            alert("Successful!");
             retrieveSchedules();
         },
         error: function (data) {
@@ -374,7 +362,6 @@ function scheduleDELETE(id) {
         url: 'https://hk-iot-team-02.azurewebsites.net/api/Teacher_Exam/' + id,
         type: 'DELETE',
         success: function () {
-            alert("Changes saved!");
             retrieveSchedules();
         },
         error: function () {
@@ -390,7 +377,6 @@ function schedulePOST(schedule) {
         contentType: 'application/json',
         data: JSON.stringify(schedule),
         success: function () {
-            alert("Changes saved!");
             retrieveSchedules();
         },
         error: function () {

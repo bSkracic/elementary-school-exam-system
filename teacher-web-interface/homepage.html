@@ -18,6 +18,26 @@
                 <h3 id="title" style="color: white; font-weight: bold; display: inline">Exam System :: Teacher </h3>
                 <br />
                 <label id="professor-name" style="color: white; font-weight: bold; font-size: 15px;"></label>
+                <div id="navigation">
+                    <div class="btn-group" role="group">
+                        <button class="btn btn-light" style="font-weight: bold; color:green;" onclick="retrieveSchedules()">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                            Your Schedule
+                        </button>
+                        <button class="btn btn-light" style="font-weight: bold; color:green;" onclick="retrieveAllExams()">
+                            <span class="glyphicon  glyphicon-list-alt"></span>
+                            All Exams
+                        </button>
+                        <button class="btn btn-light" style="font-weight: bold; color:green;" data-toggle="modal" data-target="#new-exam-modal">
+                            <span class="glyphicon glyphicon-plus"></span>
+                            Create An Exam
+                        </button>
+                        <button class="btn btn-light" style="font-weight: bold; color:green;" data-toggle="modal" data-target="#new-schedule-modal">
+                            <span class="glyphicon glyphicon-pencil"></span>
+                            Schedule An Exam
+                        </button>
+                    </div>
+                </div>
             </div>
             <div class="pull-right">
                 <button id="log-out" type="button" class="btn btn-success">
@@ -26,22 +46,7 @@
                 </button>
             </div>
         </div>
-    </div>
-    <div id="navigation">
-        <ul class="nav nav-pills clearfix">
-            <li class="nav-item pull-left">
-                <a class="nav-link" style="color: green;" onclick="retrieveSchedules()">Your Schedule</a>
-            </li>
-            <li class="nav-item pull-left">
-                <a class="nav-link" style="color: green;" onclick="retrieveAllExams()">All Exams</a>
-            </li>
-            <li class="nav-link pull-right">
-                <button class="btn btn-success" data-toggle="modal" data-target="#new-exam-modal">Create An Exam</button>
-            </li>
-            <li class="nav-link pull-right">
-                <button class="btn btn-success" data-toggle="modal" data-target="#new-schedule-modal">Schedule An Exam</button>
-            </li>
-        </ul>
+        
     </div>
     <div class="col-md-2">
         <ul id="subject-filter" class="nav flex-column">

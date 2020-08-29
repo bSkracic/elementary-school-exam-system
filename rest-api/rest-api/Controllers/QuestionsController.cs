@@ -133,7 +133,7 @@ namespace rest_api.Controllers
             return CreatedAtRoute("DefaultApi", new { id = question.ID }, question);
         }
 
-        
+
 
         // DELETE: api/Questions/5
         [ResponseType(typeof(Question))]
@@ -143,6 +143,13 @@ namespace rest_api.Controllers
             if (question == null)
             {
                 return NotFound();
+            }
+
+            List<Exam_Question> relations = db.Exam_Question.Where(entry => entry.QuestionID == id).ToList();
+
+            foreach (var relation in relations)
+            {
+                db.Exam_Question.Remove(relation);
             }
 
             db.Questions.Remove(question);

@@ -10,7 +10,7 @@
     <script src="js/index-login-script.js" type="text/javascript"></script>
 </head>
 <body>
-    <div id="form" class="container" style="width: 25%;">
+    <div id="form" class="container page-center" style="height: 50%; width: 20%">
         <div class="panel panel-primary" style="align-items: center; justify-content: center;">
             <div class="panel-heading" style=" font-size: 16px; text-align: center">
                 <div style="align-items: center; justify-content: center;">
@@ -18,20 +18,21 @@
                     <h4>Exam System</h4>
                 </div>
             </div>
-            <div class="panel-body container">
-                <div id="message-box" style="width:25%">    
+            <div class="panel-body" style="align-items: center; justify-content: center;">
+                <div id="message-box" style="justify-content: center; align-items: center;">    
 
                 </div>  
-                <p id="parameters" style="align-items: center; justify-content: center;">
-                    <label for="login-email">Email:</label>
+                <div id="parameters" style="align-items: center; justify-content: center; text-align: center;" >
+                    <label for="login-email" style="width: 50%">Email:</label>
                     <br />
-                    <input id="login-email" type="text" placeholder="example@exam.com" style="width: 25%" />
+                    <input id="login-email" type="text" placeholder="example@exam.com" style="width: 100%"/>
                     <br />
-                    <label for="login-password">Password:</label>
+                    <label for="login-password" style="width: 50%">Password:</label>
                     <br />
-                    <input id="login-password" type="password" style="width: 25%" />
+                    <input id="login-password" type="password" style="width: 100%;"/>
                     <br />
-                </p>
+                </div>
+                <br />
             </div>
             <div id="wait" class="d-flex justify-content-center">
                 <div class="spinner-border" role="status">

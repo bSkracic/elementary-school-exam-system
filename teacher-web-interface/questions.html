@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -10,11 +10,11 @@
     <script src="js/questions-script.js" type="text/javascript"></script>   
 </head>
 <body>
-    <div id="container">
+    <div id="header-container">
         <div class="panel-heading clearfix" style="background-color: green;">
             <div class="pull-left">
                 <img style="display: inline" src="res/exam-system-icon.png" height="50" width="50" />
-                <h3 id="title" style="color: white; font-weight: bold; display: inline">Exam System :: Teacher </h3>
+                <h3 id="title" style="color: white; font-weight: bold; display: inline">Exam System :: Exam Editor </h3>
                 <br />
                 <label id="professor-name" style="color: white; font-weight: bold; font-size: 15px;"></label>
             </div>
@@ -23,6 +23,108 @@
                     <span class="glyphicon glyphicon-user"></span>
                     LOG OUT
                 </button>
+            </div>
+        </div>
+    </div>
+    <div id="question-container" style="position: absolute; left: 0; right: 0; margin: auto; height: 100%; width: 75%">
+        <!--Dynamically added-->
+    </div>
+    <!--Modal for editing a question-->
+    <div id="edit-question-modal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="background: darkgreen;">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 id="question-index" class="modal-title" style="color: white;">Question: </h3>
+                </div>
+                <div class="modal-body clearfix" style="text-align: center;">
+                    <label for="question-text">Text:</label>
+                    <br />
+                    <textarea id="question-text" type="text" style="font-size: 15px; width: 75%;"></textarea>
+                    <br />
+                    <label for="free-answer">Free answer: </label>
+                    <input id="free-answer" type="checkbox" onclick="toggleFreeAnswerInputs()" />
+                    <br />
+                    <label>Options: </label>
+                    <br />
+                    <label>(Select correct answer or answers, at least one is mandatory)</label>
+                    <br />
+                    <div id="options">
+                        A: <input id="option-text-A" type="text" />
+                        <input id="option-A" type="checkbox" />
+                        <br />
+                        B: <input id="option-text-B" type="text" />
+                        <input id="option-B" type="checkbox" />
+                        <br />
+                        C: <input id="option-text-C" type="text" />
+                        <input id="option-C" type="checkbox" />
+                        <br />
+                        D: <input id="option-text-D" type="text" />
+                        <input id="option-D" type="checkbox" />
+                        <br />
+                    </div>
+                    <label for="correct-answer">Correct Answer: </label>
+                    <br />
+                    <input id="correct-answer" type="text" style="width: 75%" />
+                    <br />
+                    <label for="max-points">Max Points: </label>
+                    <br />
+                    <input id="max-points" type="number" style="width: 10%" />
+                    <label>*Max points must be 1 or higher!</label>
+                    <label id="question-id" style="display: none;"></label>
+                </div>
+                <div id="question-submit-container" class="modal-footer clearfix">
+                    <button id="submit-edit-question" class="btn btn-success pull-right" type="button" data-dismiss="modal" onclick="questionPUT()">SAVE</button>
+                    <button id="submit-delete-question" class="btn btn-danger pull-right" type="button" data-dismiss="modal" onclick="questionDELETE()">DELETE</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="new-question-modal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="background: darkgreen;">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 id="question-index" class="modal-title" style="color: white;">Question: </h3>
+                </div>
+                <div class="modal-body clearfix" style="text-align: center;">
+                    <label for="new-question-text">Text:</label>
+                    <br />
+                    <textarea id="new-question-text" type="text" style="font-size: 15px; width: 75%;"></textarea>
+                    <br />
+                    <label for="new-free-answer">Free answer: </label>
+                    <input id="new-free-answer" type="checkbox" onclick="toggleFreeAnswerInputs()" />
+                    <br />
+                    <label>Options: </label>
+                    <br />
+                    <label>(Select correct answer or answers)</label>
+                    <br />
+                    <div id="options">
+                        A: <input id="new-option-text-A" type="text" />
+                        <input id="new-option-A" type="checkbox" />
+                        <br />
+                        B: <input id="new-option-text-B" type="text" />
+                        <input id="new-option-B" type="checkbox" />
+                        <br />
+                        C: <input id="new-option-text-C" type="text" />
+                        <input id="new-option-C" type="checkbox" />
+                        <br />
+                        D: <input id="new-option-text-D" type="text" />
+                        <input id="new-option-D" type="checkbox" />
+                        <br />
+                    </div>
+                    <label for="new-correct-answer">Correct Answer: </label>
+                    <br />
+                    <input id="new-correct-answer" type="text" />
+                    <br />
+                    <label for="new-max-points">Max Points: </label>
+                    <br />
+                    <input id="new-max-points" type="number" style="width: 10%" />
+                    <label>*Max points must be 1 or higher!</label>
+                </div>
+                <div class="modal-footer clearfix">
+                    <button id="submit-new-question" class="btn btn-success pull-right" type="button" data-dismiss="modal" onclick="questionPOST()">CREATE QUESTION</button>
+                </div>
             </div>
         </div>
     </div>

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.Data.Entity.Core.Common.CommandTrees;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
@@ -9,6 +10,7 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
 using rest_api;
+using static rest_api.Controllers.DataTransferObject;
 
 namespace rest_api.Controllers
 {
@@ -23,43 +25,47 @@ namespace rest_api.Controllers
         }
 
         // GET: api/Exam_Question/5
-        [ResponseType(typeof(Exam_Question))]
+        [ResponseType(typeof(List<QuestionDTO>))]
         public IHttpActionResult GetExam_Question(int id)
         {
             //return all of the question ids for exam with 'id'
-            List<Exam_Question> exam_Questions = db.Exam_Question.Where(entry => entry.ExamID == id).ToList<Exam_Question>();
+            List<Exam_Question> exam_Questions = db.Exam_Question.Where(entry => entry.ExamID == id).ToList();
             if (exam_Questions == null)
             {
                 return NotFound();
             }
 
-            List<int> IDs = new List<int>();
+            List<QuestionDTO> questions = new List<QuestionDTO>();
             foreach (var item in exam_Questions)
             {
                 if(item.QuestionID != null)
                 {
-                    IDs.Add((int)item.QuestionID);
+                    Question question = db.Questions.Find(item.QuestionID);
+                    questions.Add(new QuestionDTO(question));
                 }
             }
 
-            return Ok(IDs);
+            return Ok(questions);
         }
 
         // PUT: api/Exam_Question/5
         [ResponseType(typeof(void))]
-        public IHttpActionResult PutExam_Question(int id, Exam_Question exam_Question)
+        public IHttpActionResult PutExam_Question(int id, ExamQuestionDTO examQuestionDTO)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != exam_Question.ID)
+            if (id != examQuestionDTO.ID)
             {
                 return BadRequest();
             }
 
-            db.Entry(exam_Question).State = EntityState.Modified;
+            Exam_Question exam_Question = db.Exam_Question.Find(id);
+            exam_Question.QuestionID = examQuestionDTO.QuestionID;
+            exam_Question.ExamID = examQuestionDTO.ExamID;
+            exam_Question.QuestionNumber = 0;
 
             try
             {
@@ -81,14 +87,18 @@ namespace rest_api.Controllers
         }
 
         // POST: api/Exam_Question
-        [ResponseType(typeof(Exam_Question))]
-        public IHttpActionResult PostExam_Question(Exam_Question exam_Question)
+        [ResponseType(typeof(ExamQuestionDTO))]
+        public IHttpActionResult PostExam_Question(ExamQuestionDTO examQuestionDTO)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
+            Exam_Question exam_Question = new Exam_Question();
+            exam_Question.ExamID = examQuestionDTO.ExamID;
+            exam_Question.QuestionID = examQuestionDTO.QuestionID;
+            exam_Question.QuestionNumber = examQuestionDTO.QuestionNumber;
             db.Exam_Question.Add(exam_Question);
             db.SaveChanges();
 
@@ -96,7 +106,7 @@ namespace rest_api.Controllers
         }
 
         // DELETE: api/Exam_Question/5
-        [ResponseType(typeof(Exam_Question))]
+        [ResponseType(typeof(ExamQuestionDTO))]
         public IHttpActionResult DeleteExam_Question(int id)
         {
             Exam_Question exam_Question = db.Exam_Question.Find(id);
