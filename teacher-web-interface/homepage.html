@@ -9,6 +9,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <script src="js/homepage-script.js" type="text/javascript"></script>
     <script src="js/create-schedule-script.js" type="text/javascript"></script>
+    <script src="js/index-login-script.js" type="text/javascript"></script>
 </head>
 <body>
     <div id="container">
@@ -24,6 +25,10 @@
                             <span class="glyphicon glyphicon-calendar"></span>
                             Your Schedule
                         </button>
+                        <button class="btn btn-light" style="font-weight: bold; color:green;" data-toggle="modal" data-target="#new-schedule-modal">
+                            <span class="glyphicon glyphicon-pencil"></span>
+                            Schedule An Exam
+                        </button>
                         <button class="btn btn-light" style="font-weight: bold; color:green;" onclick="retrieveAllExams()">
                             <span class="glyphicon  glyphicon-list-alt"></span>
                             All Exams
@@ -32,15 +37,11 @@
                             <span class="glyphicon glyphicon-plus"></span>
                             Create An Exam
                         </button>
-                        <button class="btn btn-light" style="font-weight: bold; color:green;" data-toggle="modal" data-target="#new-schedule-modal">
-                            <span class="glyphicon glyphicon-pencil"></span>
-                            Schedule An Exam
-                        </button>
                     </div>
                 </div>
             </div>
             <div class="pull-right">
-                <button id="log-out" type="button" class="btn btn-success">
+                <button id="log-out" type="button" class="btn btn-success" onclick="logOut()">
                     <span class="glyphicon glyphicon-user"></span>
                     LOG OUT
                 </button>
@@ -110,8 +111,8 @@
                         </div>
                     </div>
                     <div class="modal-footer clearfix">
-                        <button id="save-changes" type="button" class="btn btn-success pull-right" data-dismiss="modal">SAVE</button>
-                        <button id="delete-schedule" type="button" class="btn btn-danger pull-right" data-dismiss="modal">DELETE</button>
+                        <button id="save-changes" type="button" class="btn btn-success pull-right" data-dismiss="modal" onclick="schedulePUT()">SAVE</button>
+                        <button id="delete-schedule" type="button" class="btn btn-danger pull-right" data-dismiss="modal" onclick="scheduleDELETE()">DELETE</button>
                     </div>
                 </div>
             </div>
@@ -128,7 +129,9 @@
                 <div class="modal-body">
                     <div id="first">
                         <label>Select an exam: </label>
+                        <br />
                         <input id="searchterm" type="text" placeholder="Search..." onkeyup="filterExams(event)" style="width: 75%;" />
+                        <br />
                         <div id="exam-container">
                             <!--Dynamically added-->
                         </div>
@@ -161,7 +164,7 @@
                 </div>
                 <div id="second-submit" class="modal-footer clearfix" style="display: none;">
                     <button id="back" class="btn btn-success pull-left" type="button" onclick="backModal()">BACK</button>
-                    <button id="create-schedule" class="btn btn-success pull-right" type="button" data-dismiss="modal">SCHEDULE</button>
+                    <button id="create-schedule" class="btn btn-success pull-right" type="button" data-dismiss="modal" onclick="schedulePOST()">SCHEDULE</button>
                 </div>
             </div>
         </div>
@@ -187,7 +190,7 @@
                 </div>
                 <div class="modal-footer clearfix">
                     <button id="edit-questions" class="btn btn-success pull-left" type="button" data-dismiss="modal">EDIT QUESTIONS</button>
-                    <button id="submit-edit-exam" class="btn btn-success pull-right" type="button" data-dismiss="modal">SAVE</button>
+                    <button id="submit-edit-exam" class="btn btn-success pull-right" type="button" data-dismiss="modal" onclick="examPUT()">SAVE</button>
                 </div>
             </div>
         </div>
@@ -212,7 +215,7 @@
                     </select>
                 </div>
                 <div class="modal-footer clearfix">
-                    <button id="submit-create-exam" class="btn btn-success pull-right" type="button" data-dismiss="modal">CREATE AN EXAM</button>
+                    <button id="submit-create-exam" class="btn btn-success pull-right" type="button" data-dismiss="modal" onclick="examPOST()">CREATE AN EXAM</button>
                 </div>
             </div>
         </div>

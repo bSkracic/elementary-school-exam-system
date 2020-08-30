@@ -50,6 +50,10 @@ function createAlertDiv(message) {
 
 function createSpinner() {
     $('#wait').append(
-        '<span class="s">Loading...</span>'
+        '<span class="sr-only" style="text-align: center;">Verifying...</span>'
     );
+}
+
+function logOut() {
+    window.open("index.html", "_self");
 }

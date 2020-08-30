@@ -17,36 +17,6 @@ function startNewScheduleModal() {
     $('#second').hide();
     $('#second-submit').hide();
     retrieveExams();
-
-    $('#create-schedule').bind('click', function () {
-        const examID = $('#selected-exam-name').val();
-        const dateStart = $('#new-start-date').val() + 'T' + $('#new-start-time').val();
-        const dateEnd = $('#new-end-date').val() + 'T' + $('#new-end-time').val();
-        const time = $('#new-avlbl-time').val();
-        // Check if end date is before start date and vice versa
-        const tempStartDate = new Date(dateStart);
-        const tempEndDate = new Date(dateEnd);
-        const currentTime = new Date().getTime();
-        if (tempStartDate.getTime() < currentTime || tempEndDate.getTime() < currentTime) {
-            alert("Cannot schedule exams in the past!");
-            return;
-        }
-        if (tempStartDate.getTime() > tempEndDate.getTime()) {
-            alert("End date cannot be before start date!");
-            return;
-        }
-       // Construct POST method body
-        var body = {
-            TeacherID: teacherID,
-            ExamID: examID,
-            DatetimeStart: dateStart,
-            DatetimeEnd: dateEnd,
-            AvailableTime: time
-        };
-
-        console.log(body);
-        schedulePOST(body);
-    });
 }
 
 function backModal() {
@@ -86,7 +56,6 @@ function populateExamSelector(_examMap) {
     }
 }
 
-// not sure if this works
 function filterExams(event) {
     const searchTerm = $(event.target).val();
     if (searchTerm === "") {
@@ -100,5 +69,5 @@ function filterExams(event) {
             filteredExamMap[key] = examMap[key];
         }
     }
-    populateExamSelector(filterExams);
+    populateExamSelector(filteredExamMap);
 }

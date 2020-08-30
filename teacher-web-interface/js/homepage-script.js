@@ -8,16 +8,9 @@ let schedules;
 let subjects;
 let allExams;
 
-// TODO: Create login attempt on page refresh after 10 min of an open session
-// TODO: Create logout functionallity
-// TODO: Fix AJAX calls in a way they are triggered with html onclick attributes so they are called only once
-
-// BUG: Filtering system for exam scheduling does not work
-// BUG: When POSTing Schedules, many copies are created?????, I hate that
-// BUG: Listener of list-item object does not pass id to modal -- FIXED
-// BUG: Font color highlight (exam status) does not work properly(check conditioning) -- FIXED, try something with badges
-// BUG: Start date in modal does not display correctly (does not even display) -- FIXED
-// BUG: schedule exam button onclick does not call startNewScheduleModal() -- FIXED
+// Not smart at all
+let scheduleID;
+let examID;
 
 class DateTimeFactory {
     constructor(datetimeString) {
@@ -70,9 +63,11 @@ function onDocumentReady() {
     teacherID = -1;
     classID = -1;
     schedules = {};
+ 
     // Retrieve teacher's id from href
     const url = window.location.href;
     teacherID = url.split('?')[1].split('=')[1];
+
     // Populate containers
     populateDetails();
     retrieveSchedules();
@@ -243,6 +238,7 @@ function createListItem(exam, status) {
 * Modal handelers
 */
 function startEditScheduleModal(id) {
+    scheduleID = id;
     var selectedExam = schedules[id];
     var startDate = new DateTimeFactory(selectedExam.DatetimeStart);
     var endDate = new DateTimeFactory(selectedExam.DatetimeEnd);
@@ -251,115 +247,97 @@ function startEditScheduleModal(id) {
     $('#edit-end-date').val(endDate.date);
     $('#edit-end-time').val(endDate.time);
     $('#edit-avlbl-time').val(parseFloat(selectedExam.AvailableTime).toFixed(0));
-
-    $('#save-changes').bind('click', function () {
-        const dateStart = $('#edit-start-date').val() + 'T' + $('#edit-start-time').val(); 
-        const dateEnd = $('#edit-end-date').val() + 'T' + $('#edit-end-time').val(); 
-        //check if end date is set before start date
-        const tempDateStart = new Date(dateStart);
-        const tempDateEnd = new Date(dateEnd);
-        const currentTime = new Date().getTime();
-        if (tempDateStart.getTime() < currentTime || tempDateEnd.getTime() < currentTime) {
-            alert("Cannot schedule exams in the past!");
-            return;
-        }
-        if (tempDateStart.getTime() > tempDateEnd.getTime()) {
-            alert("End date cannot be before start date!");
-            startEditScheduleModal(id); // why does this does not work
-            return;
-        }
-
-        var body = {
-            ID: Number(id),
-            TeacherID: Number(teacherID),
-            ExamID: 0,
-            DatetimeStart: dateStart,
-            DatetimeEnd: dateEnd,
-            AvailableTime: Number($('#edit-avlbl-time').val())
-        };
-        schedulePUT(body);
-        console.log(body); // DEBUG
-    });
-
-    $('#delete-schedule').bind('click', function () {
-        const isConfirmed = confirm("You are about to delete this schedule. Proceed?");
-        if (isConfirmed) {
-            scheduleDELETE(selectedExam.ID);    
-        }
-    });
 }
 
 function startEditExamModal(event) {
     const id = $(event.target).attr('value');
     console.log(id);
+    examID = id;
     const exam = allExams[id];
     $('#edit-exam-modal').ready(function () {
         // Populate modal
         $('#edit-exam-title').val(exam.Title);
+
+        $('#select-subject').empty();
         for (const key in subjects) {
             $('#select-subject').append(
                 '<option value="' + key + '">' + subjects[key] + '</option>');
         }
+
         $('#select-subject').val(exam.SubjectID);
 
         $('#edit-questions').bind('click', function () {
             window.open("questions.html?id=" + exam.ID, "_self");
         });
 
-        $('#submit-edit-exam').bind('click', function () {
-            var body = {
-                ID: exam.ID,
-                Title: $('#edit-exam-title').val(),
-                SubjectID: Number($('#select-subject').val()),
-                Subject: "none"
-            };
-            examPUT(body);
-            console.log(body);
-        });
     });
     console.log(exam.Title);
 }
 
 function startNewExamModal() {
+
+    $('#n-select-subject').empty();
+
     for (const key in subjects) {
         $('#n-select-subject').append(
             '<option value="' + key + '">' + subjects[key] + '</option>');
     }
 
     $('#submit-create-exam').bind('click', function () {
-        var body = {
-            ID: 0,
-            Title: $('#new-exam-title').val(),
-            SubjectID: Number($('#n-select-subject').val()),
-            Subject: "none"
-        };
-        examPOST(body);
-        console.log(body);
+        
     });
 }
 
-//--AJAX METHODS
+//-- AJAX METHODS
 /*
 * Schedule AJAX methods 
 */
-function schedulePUT(schedule) {
+function schedulePUT() {
+    const dateStart = $('#edit-start-date').val() + 'T' + $('#edit-start-time').val();
+    const dateEnd = $('#edit-end-date').val() + 'T' + $('#edit-end-time').val();
+    //check if end date is set before start date
+    const tempDateStart = new Date(dateStart);
+    const tempDateEnd = new Date(dateEnd);
+    const currentTime = new Date().getTime();
+    if (tempDateStart.getTime() < currentTime || tempDateEnd.getTime() < currentTime) {
+        alert("Cannot schedule exams in the past!");
+        return;
+    }
+    if (tempDateStart.getTime() > tempDateEnd.getTime()) {
+        alert("End date cannot be before start date!");
+        return;
+    }
+
+    var body = {
+        ID: Number(scheduleID),
+        TeacherID: Number(teacherID),
+        ExamID: 0,
+        DatetimeStart: dateStart,
+        DatetimeEnd: dateEnd,
+        AvailableTime: Number($('#edit-avlbl-time').val())
+    };
+    console.log(body); // DEBUG
+
     $.ajax({
-        url: 'https://hk-iot-team-02.azurewebsites.net/api/Teacher_Exam/' + schedule.ID,
+        url: 'https://hk-iot-team-02.azurewebsites.net/api/Teacher_Exam/' + scheduleID,
         type: 'PUT',
         contentType: 'application/json',
-        data: JSON.stringify(schedule),
-        success: function (data) {
+        data: JSON.stringify(body),
+        success: function () {
             retrieveSchedules();
         },
-        error: function (data) {
+        error: function () {
             alert("Bad request") // DEBUG, delete for all instances 
         }
     });
 }
 
-function scheduleDELETE(id) {
+function scheduleDELETE() {
+
+    // bring back the delete
+
     $.ajax({
-        url: 'https://hk-iot-team-02.azurewebsites.net/api/Teacher_Exam/' + id,
+        url: 'https://hk-iot-team-02.azurewebsites.net/api/Teacher_Exam/' + scheduleID,
         type: 'DELETE',
         success: function () {
             retrieveSchedules();
@@ -371,11 +349,39 @@ function scheduleDELETE(id) {
 }
 
 function schedulePOST(schedule) {
+
+    const examID = $('#selected-exam-name').val();
+    const dateStart = $('#new-start-date').val() + 'T' + $('#new-start-time').val();
+    const dateEnd = $('#new-end-date').val() + 'T' + $('#new-end-time').val();
+    const time = $('#new-avlbl-time').val();
+    // Check if end date is before start date and vice versa
+    const tempStartDate = new Date(dateStart);
+    const tempEndDate = new Date(dateEnd);
+    const currentTime = new Date().getTime();
+    if (tempStartDate.getTime() < currentTime || tempEndDate.getTime() < currentTime) {
+        alert("Cannot schedule exams in the past!");
+        return;
+    }
+    if (tempStartDate.getTime() > tempEndDate.getTime()) {
+        alert("End date cannot be before start date!");
+        return;
+    }
+    // Construct POST method body
+    var body = {
+        TeacherID: teacherID,
+        ExamID: examID,
+        DatetimeStart: dateStart,
+        DatetimeEnd: dateEnd,
+        AvailableTime: time
+    };
+
+    console.log(body);
+
     $.ajax({
         url: 'https://hk-iot-team-02.azurewebsites.net/api/Teacher_Exam/',
         type: 'POST',
         contentType: 'application/json',
-        data: JSON.stringify(schedule),
+        data: JSON.stringify(body),
         success: function () {
             retrieveSchedules();
         },
@@ -387,34 +393,52 @@ function schedulePOST(schedule) {
 /*
 * Exam AJAX methods
 */
-function examPUT(_exam) {
+function examPUT() {
+
+    var body = {
+        ID: Number(examID),
+        Title: $('#edit-exam-title').val(),
+        SubjectID: Number($('#select-subject').val()),
+        Subject: "none"
+    };
+
+    console.log(body);
+
     $.ajax({
-        url: 'https://hk-iot-team-02.azurewebsites.net/api/Exams/' + _exam.ID,
+        url: 'https://hk-iot-team-02.azurewebsites.net/api/Exams/' + examID,
         type: 'PUT',
         contentType: 'application/json',
-        data: JSON.stringify(_exam),
+        data: JSON.stringify(body),
         success: function (data) {
-            alert("Successful!");
             retrieveAllExams();
         },
         error: function (data) {
-            alert("Bad request") // DEBUG, delete for all instances 
+            alert("Bad request") 
         }
     });
 }
 
-function examPOST(_exam) {
+function examPOST() {
+
+    var body = {
+        ID: 0,
+        Title: $('#new-exam-title').val(),
+        SubjectID: Number($('#n-select-subject').val()),
+        Subject: "none"
+    };
+
+    console.log(body);
+
     $.ajax({
         url: 'https://hk-iot-team-02.azurewebsites.net/api/Exams/',
         type: 'POST',
         contentType: 'application/json',
-        data: JSON.stringify(_exam),
+        data: JSON.stringify(body),
         success: function (data) {
-            alert("Successful!");
             retrieveAllExams();
         },
         error: function (data) {
-            alert("Bad request") // DEBUG, delete for all instances 
+            alert("Bad request") 
         }
     });
 }
