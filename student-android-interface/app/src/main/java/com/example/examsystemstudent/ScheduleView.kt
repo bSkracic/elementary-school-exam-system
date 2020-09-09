@@ -10,6 +10,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
 import androidx.core.view.get
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_schedule_view.*
@@ -158,13 +159,23 @@ class ScheduleView : AppCompatActivity(), OnItemClickListener {
     }
 
     override fun onItemClickedListener(schedule: Schedule) {
-        val intent = Intent(this, ExamActivity::class.java).apply {
-            putExtra("STUDENT_ID", studentID)
-            putExtra("TEACHER_ID", teacherID)
-            putExtra("EXAM_ID", schedule.ExamID)
-            putExtra("AVAILABLE_TIME", schedule.AvailableTime.toInt())
-        }
-        startActivity(intent)
+        val alertDialog = AlertDialog.Builder(this)
+        alertDialog.setMessage("You are about to begin exam. Be careful, if you do not submit exam in specified time limit, you'll receive 0 points! Begin?").setCancelable(true)
+            .setPositiveButton("Yes") { _, _ ->
+                val intent = Intent(this, ExamActivity::class.java).apply {
+                    putExtra("STUDENT_ID", studentID)
+                    putExtra("TEACHER_ID", teacherID)
+                    putExtra("EXAM_ID", schedule.ExamID)
+                    putExtra("AVAILABLE_TIME", schedule.AvailableTime.toInt())
+                }
+                startActivity(intent)
+            }
+            .setNegativeButton("Cancel") { dialog, _ ->
+            }
+        val alert = alertDialog.create()
+        alert.setTitle("Confirmation")
+        alert.show()
+
     }
 }
 

@@ -44,33 +44,41 @@ class MainActivity : AppCompatActivity() {
         val loginURL = URL("https://hk-iot-team-02.azurewebsites.net/api/Students/Login")
         val jsonBody = Gson().toJson(loginRequest)
         println("Request : $jsonBody")
-        with(loginURL.openConnection() as HttpURLConnection) {
-            this.requestMethod = "POST"
-            this.setRequestProperty("content-type", "application/json")
+        try{
+            with(loginURL.openConnection() as HttpURLConnection) {
+                this.requestMethod = "POST"
+                this.setRequestProperty("content-type", "application/json")
 
-            val wr = OutputStreamWriter(outputStream);
-            wr.write(jsonBody);
-            wr.flush();
+                val wr = OutputStreamWriter(outputStream);
+                wr.write(jsonBody);
+                wr.flush();
 
-            println("Response Code : $responseCode")
+                println("Response Code : $responseCode")
 
-            BufferedReader(InputStreamReader(inputStream)).use {
-                val response = StringBuffer()
+                BufferedReader(InputStreamReader(inputStream)).use {
+                    val response = StringBuffer()
 
-                var inputLine = it.readLine()
-                while (inputLine != null) {
-                    response.append(inputLine)
-                    inputLine = it.readLine()
+                    var inputLine = it.readLine()
+                    while (inputLine != null) {
+                        response.append(inputLine)
+                        inputLine = it.readLine()
+                    }
+                    println("Response : $response")
+
+                    val primaryResponse = JSONObject(response.toString()).getJSONObject("Response")
+                    val code = primaryResponse.getInt("Code")
+                    var userID: Any? = primaryResponse.get("UserID")
+                    var teacherID : Any? = JSONObject(response.toString()).get("TeacherID")
+                    responseHandler(code, userID, teacherID)
                 }
-                println("Response : $response")
-
-                val primaryResponse = JSONObject(response.toString()).getJSONObject("Response")
-                val code = primaryResponse.getInt("Code")
-                var userID: Any? = primaryResponse.get("UserID")
-                var teacherID : Any? = JSONObject(response.toString()).get("TeacherID")
-                responseHandler(code, userID, teacherID)
             }
+        }catch(ex: Exception){
+            withContext(Dispatchers.Main){
+                Toast.makeText(applicationContext, "Network error. Check your Internet connection!", Toast.LENGTH_SHORT).show()
+            }
+
         }
+
     }
 
     private suspend fun responseHandler(code: Int, userID: Any?, teacherID: Any?){
