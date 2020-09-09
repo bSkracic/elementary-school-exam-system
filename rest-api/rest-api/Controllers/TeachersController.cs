@@ -27,7 +27,7 @@ namespace rest_api.Controllers
         }
 
         //POST: api/Teachers/Login
-        public HttpResponseMessage TeacherLoginAttempt([FromBody]TeacherLogin data, [FromUri]int? id)
+        public HttpResponseMessage TeacherLoginAttempt([FromBody]LoginRequest data, [FromUri]int? id)
         {
             Teacher teacher = db.Teachers.Where(x => x.LoginMail == data.Mail).FirstOrDefault();
             if (teacher != null)

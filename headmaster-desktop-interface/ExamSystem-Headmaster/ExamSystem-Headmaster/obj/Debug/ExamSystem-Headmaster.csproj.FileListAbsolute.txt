@@ -1,0 +1,16 @@
+D:\new-repos\exam-system\headmaster-desktop-interface\ExamSystem-Headmaster\ExamSystem-Headmaster\bin\Debug\ExamSystem-Headmaster.exe.config
+D:\new-repos\exam-system\headmaster-desktop-interface\ExamSystem-Headmaster\ExamSystem-Headmaster\bin\Debug\ExamSystem-Headmaster.exe
+D:\new-repos\exam-system\headmaster-desktop-interface\ExamSystem-Headmaster\ExamSystem-Headmaster\bin\Debug\ExamSystem-Headmaster.pdb
+D:\new-repos\exam-system\headmaster-desktop-interface\ExamSystem-Headmaster\ExamSystem-Headmaster\obj\Debug\ExamSystem_Headmaster.Form1.resources
+D:\new-repos\exam-system\headmaster-desktop-interface\ExamSystem-Headmaster\ExamSystem-Headmaster\obj\Debug\ExamSystem_Headmaster.Properties.Resources.resources
+D:\new-repos\exam-system\headmaster-desktop-interface\ExamSystem-Headmaster\ExamSystem-Headmaster\obj\Debug\ExamSystem-Headmaster.csproj.GenerateResource.cache
+D:\new-repos\exam-system\headmaster-desktop-interface\ExamSystem-Headmaster\ExamSystem-Headmaster\obj\Debug\ExamSystem-Headmaster.csproj.CoreCompileInputs.cache
+D:\new-repos\exam-system\headmaster-desktop-interface\ExamSystem-Headmaster\ExamSystem-Headmaster\obj\Debug\ExamSystem-Headmaster.exe
+D:\new-repos\exam-system\headmaster-desktop-interface\ExamSystem-Headmaster\ExamSystem-Headmaster\obj\Debug\ExamSystem-Headmaster.pdb
+D:\new-repos\exam-system\headmaster-desktop-interface\ExamSystem-Headmaster\ExamSystem-Headmaster\bin\Debug\Newtonsoft.Json.dll
+D:\new-repos\exam-system\headmaster-desktop-interface\ExamSystem-Headmaster\ExamSystem-Headmaster\bin\Debug\Newtonsoft.Json.xml
+D:\new-repos\exam-system\headmaster-desktop-interface\ExamSystem-Headmaster\ExamSystem-Headmaster\obj\Debug\ExamSystem-Headmaster.csproj.CopyComplete
+D:\new-repos\exam-system\headmaster-desktop-interface\ExamSystem-Headmaster\ExamSystem-Headmaster\obj\Debug\ExamSystem-Headmaster.csprojAssemblyReference.cache
+D:\new-repos\exam-system\headmaster-desktop-interface\ExamSystem-Headmaster\ExamSystem-Headmaster\obj\Debug\ExamSystem_Headmaster.Form2.resources
+D:\new-repos\exam-system\headmaster-desktop-interface\ExamSystem-Headmaster\ExamSystem-Headmaster\obj\Debug\ExamSystem_Headmaster.NewStudent.resources
+D:\new-repos\exam-system\headmaster-desktop-interface\ExamSystem-Headmaster\ExamSystem-Headmaster\obj\Debug\ExamSystem_Headmaster.StudentView.resources

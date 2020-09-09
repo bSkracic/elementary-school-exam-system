@@ -19,7 +19,7 @@ function sendLoginRequest() {
         success: function (data) {
             $('#wait').empty();
             $('#message-box').empty();
-            console.log("Code: " + data.Code + "\nID:" + data.TeacherID);
+            console.log("Code: " + data.Code + "\nID:" + data.UserID);
             switch (data.Code) {
                 case -2:
                     createAlertDiv("User does not exist.");
@@ -27,8 +27,11 @@ function sendLoginRequest() {
                 case -1:
                     createAlertDiv("Wrong password.");
                     break;
+                case 0:
+                    window.open("homepage.html?id=" + data.UserID, "_self");
+                    break;
                 default:
-                    window.open("homepage.html?id=" + data.TeacherID, "_self");
+                    createAlertDiv("Internal error.");
                     break;
             }
         },
@@ -50,7 +53,7 @@ function createAlertDiv(message) {
 
 function createSpinner() {
     $('#wait').append(
-        '<span class="sr-only" style="text-align: center;">Verifying...</span>'
+        '<span style="text-align: center;">Verifying...</span>'
     );
 }
 

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ScheduleView">
+
+    <Button
+        android:id="@+id/filter_upcomingExams"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="140dp"
+        android:layout_height="45dp"
+        android:background="@color/colorPrimary"
+        android:text="UPCOMING EXAMS"
+        app:layout_constraintEnd_toStartOf="@+id/filter_results"
+        app:layout_constraintStart_toEndOf="@+id/filter_activeExams"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/filter_activeExams"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="139dp"
+        android:layout_height="44dp"
+        android:background="@color/colorPrimary"
+        android:text="Active Exams"
+        app:layout_constraintBottom_toTopOf="@+id/schedule_container"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/schedule_container"
+        android:layout_width="406dp"
+        android:layout_height="558dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/filter_upcomingExams" />
+
+    <Button
+        android:id="@+id/filter_results"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="132dp"
+        android:layout_height="44dp"
+        android:background="@color/colorPrimary"
+        android:text="Results"
+        app:layout_constraintBottom_toTopOf="@+id/schedule_container"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/label_info"
+        android:layout_width="81dp"
+        android:layout_height="20dp"
+        android:text="No exams."
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

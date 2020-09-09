@@ -11,7 +11,7 @@ namespace rest_api.Controllers
         public static int WRONG_PASSWORD = -1;
         public static int VERIFIED = 0;
 
-        public struct TeacherLogin
+        public struct LoginRequest
         {
             public string Mail;
             public string Password;
@@ -20,16 +20,15 @@ namespace rest_api.Controllers
         public struct InternalCodeResponse
         {
             public int Code { get; set; }
-            public int? TeacherID { get; set; }
+            public int? UserID { get; set; }
 
-            public InternalCodeResponse(int _code, int? _teacherID)
+            public InternalCodeResponse(int _code, int? _userID)
             {
                 this.Code = _code;
-                this.TeacherID = _teacherID;
+                this.UserID = _userID;
             }
         }
-        
-        //public class TeacherDTO, headmaster stuff
-        //public class StudentDTO, headmaster stuff
+
+
     }
 }

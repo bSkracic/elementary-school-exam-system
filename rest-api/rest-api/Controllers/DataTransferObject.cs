@@ -46,6 +46,16 @@ namespace rest_api.Controllers
             public string Class { get; set; }
         }
 
+        public class StudentDTO
+        {
+            public int ID { get; set; }
+            public string Name { get; set; }
+            public string Surname { get; set; }
+            public string LoginMail { get; set; }
+            public string LoginPassword { get; set; }
+            public int ClassID { get; set; }
+        }
+
         public class ExamDTO
         {
             //members
