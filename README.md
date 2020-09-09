@@ -1,6 +1,8 @@
 # elementary-school-exam-system
 Application eco-system for processing exams in elementary schools.
 
+Example login data: 
+
 HEADMASTER
 
 Mail: darko.daric@exam.com
