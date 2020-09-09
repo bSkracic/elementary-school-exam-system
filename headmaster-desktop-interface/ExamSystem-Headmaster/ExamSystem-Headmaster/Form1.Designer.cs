@@ -44,7 +44,6 @@
             this.input_email.Name = "input_email";
             this.input_email.Size = new System.Drawing.Size(220, 26);
             this.input_email.TabIndex = 0;
-            this.input_email.Text = "darko.daric@exam.com";
             // 
             // input_password
             // 
@@ -54,7 +53,6 @@
             this.input_password.PasswordChar = '*';
             this.input_password.Size = new System.Drawing.Size(220, 26);
             this.input_password.TabIndex = 1;
-            this.input_password.Text = "r00mbA";
             // 
             // label2
             // 
