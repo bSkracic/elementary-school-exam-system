@@ -213,18 +213,12 @@ namespace ExamSystem_Headmaster
 
         private void new_teacher_Click(object sender, EventArgs e)
         {
-
+            NewTeacher newTeacher = new NewTeacher();
+            newTeacher.ShowDialog();
         }
 
         private void UpdateStudentStatistics(object sender, EventArgs e)
         {
-            ExamData.Add(new ExamDataDTO(1, 1, 4, 4));
-            ExamData.Add(new ExamDataDTO(1, 1, 2, 4));
-            ExamData.Add(new ExamDataDTO(1, 1, 1, 4));
-            ExamData.Add(new ExamDataDTO(1, 1, 3, 4));
-            ExamData.Add(new ExamDataDTO(1, 1, 4, 4));
-            ExamData.Add(new ExamDataDTO(1, 1, 4, 4));
-
             var selectedSubject = m_subjects.SelectedItem;
             var selectedClass = m_classes.SelectedItem;
 
@@ -307,7 +301,19 @@ namespace ExamSystem_Headmaster
         private void button2_Click(object sender, EventArgs e)
         {
             PopulateStudents();
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
             PopulateTeacherStatistics();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Form1 form = new Form1();
+            form.Show();
+            form.Closed += (s, args) => this.Close();
+            this.Hide();
         }
     }    
 }

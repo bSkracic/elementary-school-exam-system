@@ -172,7 +172,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Green;
-            this.ClientSize = new System.Drawing.Size(283, 482);
+            this.ClientSize = new System.Drawing.Size(264, 466);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.s_submit);
             this.Controls.Add(label5);

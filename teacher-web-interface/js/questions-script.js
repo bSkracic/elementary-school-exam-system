@@ -215,7 +215,7 @@ function questionPUT() {
     let optionD = null;
     let correctAnswer = "";
 
-    if ($('#max-points').val() || $('#max-points').val() < 1) {
+    if ($('#max-points').val() < 1) {
         alert("Max points must be at least 1!");
     }
 
@@ -281,7 +281,7 @@ function questionPOST() {
     let optionD = null;
     let correctAnswer = "";
 
-    if ($('#new-max-points').val() || $('#new-max-points').val() < 1) {
+    if ($('#new-max-points').val() < 1) {
         alert("Max points must be at least 1!");
     }
 

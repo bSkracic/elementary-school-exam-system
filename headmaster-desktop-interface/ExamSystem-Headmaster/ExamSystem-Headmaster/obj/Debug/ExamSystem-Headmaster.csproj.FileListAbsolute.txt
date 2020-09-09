@@ -14,3 +14,4 @@ D:\new-repos\exam-system\headmaster-desktop-interface\ExamSystem-Headmaster\Exam
 D:\new-repos\exam-system\headmaster-desktop-interface\ExamSystem-Headmaster\ExamSystem-Headmaster\obj\Debug\ExamSystem_Headmaster.Form2.resources
 D:\new-repos\exam-system\headmaster-desktop-interface\ExamSystem-Headmaster\ExamSystem-Headmaster\obj\Debug\ExamSystem_Headmaster.NewStudent.resources
 D:\new-repos\exam-system\headmaster-desktop-interface\ExamSystem-Headmaster\ExamSystem-Headmaster\obj\Debug\ExamSystem_Headmaster.StudentView.resources
+D:\new-repos\exam-system\headmaster-desktop-interface\ExamSystem-Headmaster\ExamSystem-Headmaster\obj\Debug\ExamSystem_Headmaster.NewTeacher.resources

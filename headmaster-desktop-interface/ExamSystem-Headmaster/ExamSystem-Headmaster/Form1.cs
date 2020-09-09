@@ -60,6 +60,7 @@ namespace ExamSystem_Headmaster
                 case 0:
                     Form2 form2 = new Form2();
                     form2.Show();
+                    form2.Closed += (s, args) => this.Close();
                     this.Hide();
                     break;
                 default:
@@ -67,5 +68,6 @@ namespace ExamSystem_Headmaster
                     break;
             }
         }
+
     }
 }

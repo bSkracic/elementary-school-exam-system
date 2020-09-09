@@ -38,6 +38,15 @@ namespace ExamSystem_Headmaster
         public string ClassName { get; set; }
     }
 
+    public class TeacherDTO
+    {
+        public string Name { get; set; }
+        public string Surname { get; set; }
+        public string LoginMail { get; set; }
+        public string LoginPassword { get; set; }
+        public int ClassID { get; set; }
+    }
+
     public class ExamDataDTO
     {
         public int SubjectID { get; set; }
@@ -92,6 +101,7 @@ namespace ExamSystem_Headmaster
         public const string HeadMasterURL = "https://hk-iot-team-02.azurewebsites.net/api/Headmasters/";
         public const string TeacherStatisticsURL = "https://hk-iot-team-02.azurewebsites.net/api/Teacher_Exam";
         public const string StudentURL = "https://hk-iot-team-02.azurewebsites.net/api/Students/";
+        public const string TeacherURL = "https://hk-iot-team-02.azurewebsites.net/api/Teachers/";
     }
     
     class HTTP
