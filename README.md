@@ -1,4 +1,6 @@
-# elementary-school-exam-system
+# Elementary school exam system
+
+Windows form desktop application, Android Kotlin application and JQuery+Bootstrap Web application along with the REST-API.
 
 Example login data: 
 
